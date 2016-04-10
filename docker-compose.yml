@@ -1,0 +1,44 @@
+app:
+  build: ./nginx
+  ports:
+    - "8082:80"
+  links:
+    - db
+  volumes_from:
+    - appdata
+  environment:
+    - APP_MAGE_MODE=production
+    - VIRTUAL_HOST=magento.apdev.local
+    - M2SETUP_DB_HOST=db
+    - M2SETUP_DB_NAME=magento2
+    - M2SETUP_DB_USER=magento2
+    - M2SETUP_DB_PASSWORD=magento2
+    - M2SETUP_BASE_URL=http://magento.apdev.local/
+    - M2SETUP_ADMIN_FIRSTNAME=Admin
+    - M2SETUP_ADMIN_LASTNAME=Admin
+    - M2SETUP_ADMIN_EMAIL=thangnvbkhn@gmail.com
+    - M2SETUP_ADMIN_USER=magento2
+    - M2SETUP_ADMIN_PASSWORD=magento2
+    - M2SETUP_USE_SAMPLE_DATA=false
+
+appdata:
+  image: tianon/true
+  volumes:
+    - ./magento/src:/srv/nginx/magento.apdev.local
+
+db:
+  image: mariadb:10.1.10
+  ports:
+    - "3306:3306"
+  volumes_from:
+    - dbdata
+  environment:
+    - MYSQL_ROOT_PASSWORD=magento2
+    - MYSQL_DATABASE=magento2
+    - MYSQL_USER=magento2
+    - MYSQL_PASSWORD=magento2
+
+dbdata:
+  image: tianon/true
+  volumes:
+    - /var/lib/mysql
